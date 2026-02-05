@@ -1,0 +1,31 @@
+@PrinterServer_Api_HostAddress = http://localhost:5166
+
+GET {{PrinterServer_Api_HostAddress}}/printers
+Accept: application/json
+
+###
+
+POST {{PrinterServer_Api_HostAddress}}/print
+Content-Type: application/json
+
+{
+  "type": "text",
+  "text": "Hello Printer"
+}
+
+###
+
+GET {{PrinterServer_Api_HostAddress}}/history?limit=10
+Accept: application/json
+
+###
+
+GET {{PrinterServer_Api_HostAddress}}/settings
+Accept: application/json
+
+###
+
+POST {{PrinterServer_Api_HostAddress}}/token/generate
+Accept: application/json
+
+###

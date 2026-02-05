@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Printer Server</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Printer Server</p>
+        <h1>Control Panel</h1>
+        <p class="sub">Manage printers, raw settings, tokens, and history.</p>
+      </div>
+      <div class="status" id="status">Ready</div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="settings">Settings</button>
+      <button class="tab" data-tab="token">Token</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="test">Test Print</button>
+    </div>
+
+    <section class="card" id="tab-settings">
+      <div class="grid">
+        <div class="field">
+          <label>Default Printer</label>
+          <div class="row">
+            <select id="defaultPrinter"></select>
+            <button class="ghost" id="refreshPrinters">Refresh</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>RAW Mode</label>
+          <select id="rawMode">
+            <option value="winspool">Winspool</option>
+            <option value="tcp">TCP</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>RAW TCP Host</label>
+          <input id="rawTcpHost" placeholder="192.168.1.50" />
+        </div>
+
+        <div class="field">
+          <label>RAW TCP Port</label>
+          <input id="rawTcpPort" type="number" min="1" max="65535" />
+        </div>
+
+        <div class="field">
+          <label>RAW Encoding</label>
+          <select id="rawEncoding">
+            <option value="utf-8">utf-8</option>
+            <option value="ansi">ansi</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>RAW Terminator</label>
+          <input id="rawTerminator" placeholder="^XZ" />
+        </div>
+
+        <div class="field">
+          <label>Allow Local Without Token</label>
+          <select id="allowLocalNoToken">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Max File Size (MB)</label>
+          <input id="maxFileSizeMb" type="number" min="1" max="500" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="saveSettings">Save Settings</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="tab-token">
+      <div class="field">
+        <label>Current Token</label>
+        <input id="currentToken" placeholder="Generate or paste token" />
+        <p class="hint">Token is stored locally in this browser to allow requests.</p>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="generateToken">Generate Token</button>
+        <button class="ghost" id="disableToken">Disable Token</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="tab-history">
+      <div class="grid">
+        <div class="field">
+          <label>Status</label>
+          <select id="historyStatus">
+            <option value="">All</option>
+            <option value="queued">Queued</option>
+            <option value="processing">Processing</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Printer</label>
+          <input id="historyPrinter" placeholder="Printer name" />
+        </div>
+        <div class="field">
+          <label>From</label>
+          <input id="historyFrom" type="datetime-local" />
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input id="historyTo" type="datetime-local" />
+        </div>
+        <div class="field">
+          <label>Limit</label>
+          <input id="historyLimit" type="number" value="100" min="1" max="500" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="refreshHistory">Refresh History</button>
+        <label class="inline">
+          <input id="historyAuto" type="checkbox" />
+          Auto refresh
+        </label>
+        <div class="inline">
+          <span class="muted">Every</span>
+          <input id="historyInterval" class="small" type="number" value="5" min="2" max="60" />
+          <span class="muted">sec</span>
+        </div>
+      </div>
+
+      <div class="table">
+        <div class="row header">
+          <div>Time</div>
+          <div>Type</div>
+          <div>Printer</div>
+          <div>Status</div>
+          <div>Size</div>
+          <div>Client</div>
+          <div>Error</div>
+        </div>
+        <div id="historyRows"></div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="tab-test">
+      <div class="grid">
+        <div class="field">
+          <label>Type</label>
+          <select id="testType">
+            <option value="text">text</option>
+            <option value="image">image</option>
+            <option value="pdf">pdf</option>
+            <option value="raw">raw</option>
+            <option value="zpl">zpl</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Printer (optional)</label>
+          <input id="testPrinter" placeholder="Printer name" />
+        </div>
+        <div class="field">
+          <label>RAW Mode</label>
+          <select id="testRawMode">
+            <option value="">Use default</option>
+            <option value="winspool">Winspool</option>
+            <option value="tcp">TCP</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Text (for text/raw/zpl)</label>
+        <textarea id="testText" rows="6" placeholder="Enter text or ZPL here"></textarea>
+      </div>
+
+      <div class="field">
+        <label>File (for image/pdf/raw)</label>
+        <input id="testFile" type="file" />
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="sendTest">Send Print</button>
+        <div class="muted" id="testResult"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

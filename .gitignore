@@ -1,0 +1,54 @@
+## [ Visual Studio ]
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Log]/
+[Tt]est[Rr]esults/
+
+## [ .NET Core ]
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## [ ASP.NET Core ]
+wwwroot/lib/
+
+## [ Database ]
+# Keep the schema but ignore actual data if needed
+# For this project, we might want to ignore the sqlite files
+*.db
+*.db-shm
+*.db-wal
+
+## [ OS specific ]
+.DS_Store
+Thumbs.db
+
+## [ SumatraPDF ]
+# We might want to keep the executable but ignore local settings it generates
+SumatraPDF-settings.txt
+
+## [ API Testing ]
+# Ignore local test files with tokens or sensitive paths
+api-tests.http
+test-pdf-print.ps1
+test-pdf-curl.sh
+test_dummy.txt
+printer_list.txt
