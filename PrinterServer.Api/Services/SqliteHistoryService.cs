@@ -47,7 +47,7 @@ WHERE JobId = $jobId;
         command.ExecuteNonQuery();
     }
 
-    public IReadOnlyList<HistoryItem> Query(string? status, string? printer, DateTimeOffset? from, DateTimeOffset? to, int limit)
+    public async Task<IEnumerable<HistoryItem>> GetHistoryAsync(string? status, string? printer, DateTime? from, DateTime? to, int limit)
     {
         using var connection = _database.OpenConnection();
         using var command = connection.CreateCommand();
@@ -87,9 +87,9 @@ LIMIT $limit;
 """;
         command.Parameters.AddWithValue("$limit", Math.Clamp(limit, 1, 500));
 
-        using var reader = command.ExecuteReader();
+        using var reader = await command.ExecuteReaderAsync();
         var items = new List<HistoryItem>();
-        while (reader.Read())
+        while (await reader.ReadAsync())
         {
             items.Add(new HistoryItem(
                 reader.GetString(0),
@@ -103,5 +103,13 @@ LIMIT $limit;
         }
 
         return items;
+    }
+
+    public async Task ClearHistoryAsync()
+    {
+        using var connection = _database.OpenConnection();
+        using var command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM History;";
+        await command.ExecuteNonQueryAsync();
     }
 }

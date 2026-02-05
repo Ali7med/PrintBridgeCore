@@ -37,7 +37,7 @@ public sealed class InMemoryHistoryService : IHistoryService
         }
     }
 
-    public IReadOnlyList<HistoryItem> Query(string? status, string? printer, DateTimeOffset? from, DateTimeOffset? to, int limit)
+    public Task<IEnumerable<HistoryItem>> GetHistoryAsync(string? status, string? printer, DateTime? from, DateTime? to, int limit)
     {
         lock (_lock)
         {
@@ -63,7 +63,16 @@ public sealed class InMemoryHistoryService : IHistoryService
                 query = query.Where(item => item.Time <= to.Value);
             }
 
-            return query.Take(Math.Clamp(limit, 1, 500)).ToList();
+            return Task.FromResult<IEnumerable<HistoryItem>>(query.Take(Math.Clamp(limit, 1, 500)).ToList());
         }
+    }
+
+    public Task ClearHistoryAsync()
+    {
+        lock (_lock)
+        {
+            _items.Clear();
+        }
+        return Task.CompletedTask;
     }
 }

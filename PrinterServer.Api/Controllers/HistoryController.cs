@@ -17,14 +17,22 @@ public sealed class HistoryController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<HistoryResponse> GetHistory(
+    public async Task<ActionResult<HistoryResponse>> GetHistory(
         [FromQuery] string? status,
         [FromQuery] string? printer,
-        [FromQuery] DateTimeOffset? from,
-        [FromQuery] DateTimeOffset? to,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
         [FromQuery] int limit = 100)
     {
-        var items = _historyService.Query(status, printer, from, to, limit);
-        return Ok(new HistoryResponse(items));
+        var items = await _historyService.GetHistoryAsync(status, printer, from, to, limit);
+        return Ok(new HistoryResponse { Items = items.ToList() });
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteHistory()
+    {
+        await _historyService.ClearHistoryAsync();
+        return NoContent();
     }
 }

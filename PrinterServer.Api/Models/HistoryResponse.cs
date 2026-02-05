@@ -1,3 +1,6 @@
 namespace PrinterServer.Api.Models;
 
-public sealed record HistoryResponse(IReadOnlyList<HistoryItem> Items);
+public sealed class HistoryResponse
+{
+    public List<HistoryItem> Items { get; set; } = new();
+}

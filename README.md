@@ -41,7 +41,7 @@
     git clone https://github.com/your-username/PrintBridge-Core.git
     cd PrintBridge-Core
     ```
-2.  Ensure `SumatraPDF.exe` is in the root or `bin` folder for PDF support.
+2.  **Crucial:** Copy `SumatraPDF.exe` to the application's runtime directory (e.g., `PrinterServer.Api/bin/Debug/net10.0/` or the folder where the `.exe` resides). Without this file, PDF printing will not work.
 
 ### 3. Running the Server
 To enable access from other devices on the network:

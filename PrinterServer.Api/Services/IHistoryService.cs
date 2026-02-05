@@ -6,5 +6,6 @@ public interface IHistoryService
 {
     void Add(HistoryItem item);
     void UpdateStatus(string jobId, string status, string? error);
-    IReadOnlyList<HistoryItem> Query(string? status, string? printer, DateTimeOffset? from, DateTimeOffset? to, int limit);
+    Task<IEnumerable<HistoryItem>> GetHistoryAsync(string? status, string? printer, DateTime? from, DateTime? to, int limit);
+    Task ClearHistoryAsync();
 }
