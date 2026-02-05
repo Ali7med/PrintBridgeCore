@@ -21,6 +21,7 @@ bld/
 [Oo]bj/
 [Log]/
 [Tt]est[Rr]esults/
+Publish/
 
 ## [ .NET Core ]
 project.lock.json

@@ -2,14 +2,24 @@ using PrinterServer.Api.Printing;
 using PrinterServer.Api.Middleware;
 using PrinterServer.Api.Services;
 using PrinterServer.Api.Storage;
+using Microsoft.Extensions.Hosting.WindowsServices;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = WindowsServiceHelpers.IsWindowsService() ? AppContext.BaseDirectory : default
+});
+
+builder.Host.UseWindowsService(options =>
+{
+    options.ServiceName = "PrintBridgeCore";
+});
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 var sqlitePath = builder.Configuration["Storage:SqlitePath"] ?? "data/printer.db";
-var baseDir = builder.Environment.ContentRootPath;
+var baseDir = AppContext.BaseDirectory;
 var fullPath = Path.GetFullPath(Path.Combine(baseDir, sqlitePath));
 Directory.CreateDirectory(Path.GetDirectoryName(fullPath) ?? baseDir);
 var connectionString = $"Data Source={fullPath}";
